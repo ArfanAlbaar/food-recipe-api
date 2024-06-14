@@ -1,7 +1,16 @@
 package com.uas.kelompoksatu.recipe;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
 
-public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+
+import com.uas.kelompoksatu.user.User;
+
+@Repository
+public interface RecipeRepository extends JpaRepository<Recipe, Integer>, JpaSpecificationExecutor<Recipe> {
+
+    Optional<Recipe> findFirstByUserAndId(User user, Integer id);
 
 }

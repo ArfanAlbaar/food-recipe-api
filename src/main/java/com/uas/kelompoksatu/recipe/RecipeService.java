@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.uas.kelompoksatu.user.User;
+import com.uas.kelompoksatu.user.service.ValidationService;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -16,8 +19,12 @@ public class RecipeService {
     @Autowired
     private RecipeRepository repo;
 
+    @Autowired
+    private ValidationService validationService;
+
     @Transactional
-    public Recipe create(Recipe recipe) {
+    public Recipe create(User user, Recipe recipe) {
+        validationService.validate(recipe);
         return repo.save(recipe);
     }
 
@@ -26,14 +33,21 @@ public class RecipeService {
 
     }
 
+    // public Recipe readById(User user, Integer recipeId) {
+    // return repo.findFirstByUserAndId(user, recipeId)
+    // .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe
+    // not found"));
+    // }
     public Recipe readById(Integer recipeId) {
         return repo.findById(recipeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe not found"));
     }
 
     @Transactional
-    public ResponseEntity<Recipe> update(Recipe update) {
-        Recipe recipe = repo.findById(update.getId())
+    public ResponseEntity<Recipe> update(User user, Recipe update) {
+        validationService.validate(update);
+
+        Recipe recipe = repo.findFirstByUserAndId(user, update.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe is not found"));
         recipe.setRecipeName(update.getRecipeName());
         recipe.setIngredients(update.getIngredients());
@@ -45,8 +59,8 @@ public class RecipeService {
     }
 
     @Transactional
-    public String delete(Integer recipeId) {
-        Recipe recipe = repo.findById(recipeId)
+    public String delete(User user, Integer recipeId) {
+        Recipe recipe = repo.findFirstByUserAndId(user, recipeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe not found"));
         repo.deleteById(recipe.getId());
         return "Deleted";
