@@ -2,6 +2,7 @@ package com.uas.kelompoksatu.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,14 +13,15 @@ import com.uas.kelompoksatu.user.User;
 import com.uas.kelompoksatu.user.model.LoginUserRequest;
 import com.uas.kelompoksatu.user.model.TokenResponse;
 import com.uas.kelompoksatu.user.model.WebResponse;
-import com.uas.kelompoksatu.user.service.AuthService;
+import com.uas.kelompoksatu.user.service.AuthUserService;
 
 @RestController
 @RequestMapping("/api/user/auth")
-public class AuthController {
+@CrossOrigin
+public class AuthUserController {
 
     @Autowired
-    private AuthService authService;
+    private AuthUserService authService;
 
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public WebResponse<TokenResponse> login(@RequestBody LoginUserRequest request) {

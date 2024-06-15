@@ -15,7 +15,7 @@ import com.uas.kelompoksatu.user.model.TokenResponse;
 import com.uas.kelompoksatu.user.security.BCrypt;
 
 @Service
-public class AuthService {
+public class AuthUserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -47,6 +47,16 @@ public class AuthService {
         }
     }
 
+    // Fungsi expiredAt menghitung waktu kedaluwarsa (expired time)
+    // dalam milidetik (milliseconds) dari waktu saat ini. Berikut adalah
+    // langkah-langkah perhitungannya:
+    // Ini adalah fungsi yang mengembalikan waktu saat ini dalam
+    // bentuk milidetik (milliseconds) sejak epoch (1 Januari 1970 00:00:00 UTC).
+    // Jadi, (1000 * 60 * 60 * 24 * 1) = 1000 * 60 * 60 * 24 = 86.400.000 milidetik
+    // (1 hari).
+    // Untuk konversi dari milidetik ke hari, kita bagi jumlah milidetik dengan
+    // jumlah milidetik dalam satu hari.
+    // 86400000 milidetik / 86400000 milidetik per hari = 1 hari
     private Long next30Days() {
         return System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 1); // 30 untuk 30 hari, disini ganti 1 untuk 1 hari
     }

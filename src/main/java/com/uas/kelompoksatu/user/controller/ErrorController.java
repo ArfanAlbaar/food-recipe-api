@@ -2,6 +2,7 @@ package com.uas.kelompoksatu.user.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,6 +12,7 @@ import com.uas.kelompoksatu.user.model.WebResponse;
 import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
+@CrossOrigin
 public class ErrorController {
 
     @ExceptionHandler(ConstraintViolationException.class)

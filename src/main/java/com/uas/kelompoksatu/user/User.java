@@ -12,6 +12,7 @@ import lombok.Data;
 public class User {
 
     @Id
+    @Column(unique = true, nullable = false)
     private String username;
 
     private String password;
