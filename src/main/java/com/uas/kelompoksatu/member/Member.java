@@ -1,13 +1,16 @@
 package com.uas.kelompoksatu.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.uas.kelompoksatu.transaction.Transaksi;
 import com.uas.kelompoksatu.user.User;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -39,6 +42,8 @@ public class Member {
     @JoinColumn(name = "fk_user", referencedColumnName = "username")
     private User user;
 
-    // @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
-    // private Transaction transaction;
+    private Boolean premium;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private Transaksi transaction;
 }

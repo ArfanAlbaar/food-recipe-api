@@ -93,6 +93,8 @@ public class MemberService {
             member.setPhoneNumber(update.getPhoneNumber());
         }
 
+        member.setPremium(update.getPremium());
+
         memberRepository.save(member);
 
         log.info("MEMBER : {}", member.getName());
@@ -101,6 +103,7 @@ public class MemberService {
                 .username(member.getUsername())
                 .name(member.getName())
                 .phoneNumber(member.getPhoneNumber())
+                .premium(member.getPremium())
                 .build();
     }
 

@@ -13,4 +13,6 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     Optional<Member> findFirstByToken(String token);
 
     Optional<Member> findFirstByUserAndUsername(User user, String username);
+
+    Optional<Member> findFirstByTokenAndPremium(String token, Boolean premium);
 }

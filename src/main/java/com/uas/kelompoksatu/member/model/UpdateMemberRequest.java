@@ -18,4 +18,6 @@ public class UpdateMemberRequest {
 
     @Size(max = 20)
     private String phoneNumber;
+
+    private Boolean premium;
 }

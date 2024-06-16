@@ -12,4 +12,6 @@ public class MemberResponse {
     private String name;
 
     private String phoneNumber;
+
+    private Boolean premium;
 }

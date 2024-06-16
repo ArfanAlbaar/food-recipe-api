@@ -59,6 +59,7 @@ public class RecipeService {
 
     @Transactional
     public String delete(User user, Integer recipeId) {
+        validationService.validate(user);
         Recipe recipe = repo.findFirstByUserAndId(user, recipeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe not found"));
         repo.deleteById(recipe.getId());
