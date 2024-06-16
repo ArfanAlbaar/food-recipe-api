@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.uas.kelompoksatu.dontdelete.TokenResponse;
 import com.uas.kelompoksatu.member.Member;
 import com.uas.kelompoksatu.member.MemberRepository;
 import com.uas.kelompoksatu.member.model.LoginMemberRequest;
-import com.uas.kelompoksatu.user.model.TokenResponse;
 import com.uas.kelompoksatu.user.security.BCrypt;
 import com.uas.kelompoksatu.user.service.ValidationService;
 

@@ -1,4 +1,4 @@
-package com.uas.kelompoksatu.user.model;
+package com.uas.kelompoksatu.dontdelete;
 
 import lombok.Builder;
 import lombok.Data;

@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.uas.kelompoksatu.dontdelete.TokenResponse;
+import com.uas.kelompoksatu.dontdelete.WebResponse;
 import com.uas.kelompoksatu.member.Member;
 import com.uas.kelompoksatu.member.model.LoginMemberRequest;
 import com.uas.kelompoksatu.member.service.AuthMemberService;
-import com.uas.kelompoksatu.user.model.TokenResponse;
-import com.uas.kelompoksatu.user.model.WebResponse;
 
 @RestController
 @RequestMapping("/api/member/auth")

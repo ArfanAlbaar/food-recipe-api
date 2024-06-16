@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.uas.kelompoksatu.dontdelete.WebResponse;
 import com.uas.kelompoksatu.member.Member;
 import com.uas.kelompoksatu.member.model.MemberResponse;
 import com.uas.kelompoksatu.member.model.RegisterMemberRequest;
@@ -25,7 +26,6 @@ import com.uas.kelompoksatu.member.model.UpdateMemberRequest;
 import com.uas.kelompoksatu.member.service.MemberService;
 import com.uas.kelompoksatu.user.User;
 import com.uas.kelompoksatu.user.UserRepository;
-import com.uas.kelompoksatu.user.model.WebResponse;
 
 @RestController
 @RequestMapping("/api/member")
@@ -72,7 +72,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{username}")
-    public String delete(@RequestHeader("X-API-TOKEN") String token, @PathVariable("username") String username) {
+    public String delete(@RequestHeader("API-TOKEN") String token, @PathVariable("username") String username) {
         // Fetch user by token
         Optional<User> optionalUser = userRepository.findFirstByToken(token);
 

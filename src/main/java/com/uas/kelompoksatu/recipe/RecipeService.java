@@ -33,11 +33,10 @@ public class RecipeService {
 
     }
 
-    // public Recipe readById(User user, Integer recipeId) {
-    // return repo.findFirstByUserAndId(user, recipeId)
-    // .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe
-    // not found"));
-    // }
+    public List<Recipe> getRecipesByCategory(RecipeCategory category) {
+        return repo.findByCategory(category);
+    }
+
     public Recipe readById(Integer recipeId) {
         return repo.findById(recipeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe not found"));

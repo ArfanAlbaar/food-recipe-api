@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uas.kelompoksatu.dontdelete.WebResponse;
 import com.uas.kelompoksatu.user.User;
 import com.uas.kelompoksatu.user.model.RegisterUserRequest;
 import com.uas.kelompoksatu.user.model.UpdateUserRequest;
 import com.uas.kelompoksatu.user.model.UserResponse;
-import com.uas.kelompoksatu.user.model.WebResponse;
 import com.uas.kelompoksatu.user.service.UserService;
 
 @RestController
