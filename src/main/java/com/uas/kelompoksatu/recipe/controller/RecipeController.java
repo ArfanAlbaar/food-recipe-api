@@ -1,4 +1,4 @@
-package com.uas.kelompoksatu.recipe;
+package com.uas.kelompoksatu.recipe.controller;
 
 import java.util.List;
 
@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uas.kelompoksatu.recipe.entities.Recipe;
+import com.uas.kelompoksatu.recipe.entities.RecipeCategory;
+import com.uas.kelompoksatu.recipe.services.RecipeService;
 import com.uas.kelompoksatu.user.User;
 
 @RestController
@@ -32,7 +35,7 @@ public class RecipeController {
     }
 
     @GetMapping
-    public List<Recipe> getRecipes(@RequestParam(required = false) String category) {
+    public List<Recipe> readByCategory(@RequestParam(required = false) String category) {
         if (category != null) {
             try {
                 RecipeCategory recipeCategory = RecipeCategory.valueOf(category.toUpperCase());
@@ -59,7 +62,7 @@ public class RecipeController {
     }
 
     @DeleteMapping("/{recipeId}")
-    public String delete(User user, @PathVariable("recipeId") int recipeId) {
+    public String delete(User user, @PathVariable("recipeId") Integer recipeId) {
 
         return service.delete(user, recipeId);
     }

@@ -1,4 +1,4 @@
-package com.uas.kelompoksatu.recipe;
+package com.uas.kelompoksatu.recipe.services;
 
 import java.util.List;
 
@@ -8,8 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.uas.kelompoksatu.dontdelete.ValidationService;
+import com.uas.kelompoksatu.recipe.entities.Recipe;
+import com.uas.kelompoksatu.recipe.entities.RecipeCategory;
+import com.uas.kelompoksatu.recipe.repositories.RecipeRepository;
 import com.uas.kelompoksatu.user.User;
-import com.uas.kelompoksatu.user.service.ValidationService;
 
 import jakarta.transaction.Transactional;
 
@@ -46,15 +49,26 @@ public class RecipeService {
     public ResponseEntity<Recipe> update(User user, Recipe update) {
         validationService.validate(update);
 
-        Recipe recipe = repo.findFirstByUserAndId(user, update.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe is not found"));
-        recipe.setRecipeName(update.getRecipeName());
-        recipe.setIngredients(update.getIngredients());
-        recipe.setInstructions(update.getInstructions());
-        recipe.setCategory(update.getCategory());
-        recipe.setFavorite(update.getFavorite());
-        repo.save(recipe);
-        return new ResponseEntity<Recipe>(recipe, HttpStatus.ACCEPTED);
+        if (user != null) {
+            if (user.getToken() != null) {
+                Recipe recipe = repo.findById(update.getId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe is not found"));
+                recipe.setRecipeName(update.getRecipeName());
+                recipe.setIngredients(update.getIngredients());
+                recipe.setInstructions(update.getInstructions());
+                recipe.setCategory(update.getCategory());
+                recipe.setFavorite(update.getFavorite());
+                repo.save(recipe);
+                return new ResponseEntity<Recipe>(recipe, HttpStatus.ACCEPTED);
+            } else {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not logged in");
+
+            }
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You don't have permission");
+        }
+
     }
 
     @Transactional

@@ -1,4 +1,4 @@
-package com.uas.kelompoksatu.recipe;
+package com.uas.kelompoksatu.recipe.entities;
 
 public enum RecipeCategory {
     BREAKFAST,

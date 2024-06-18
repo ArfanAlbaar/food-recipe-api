@@ -1,5 +1,6 @@
 package com.uas.kelompoksatu.member.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.uas.kelompoksatu.dontdelete.TokenResponse;
+import com.uas.kelompoksatu.dontdelete.ValidationService;
 import com.uas.kelompoksatu.member.Member;
 import com.uas.kelompoksatu.member.MemberRepository;
 import com.uas.kelompoksatu.member.model.LoginMemberRequest;
 import com.uas.kelompoksatu.user.security.BCrypt;
-import com.uas.kelompoksatu.user.service.ValidationService;
 
 @Service
 public class AuthMemberService {
@@ -57,6 +58,7 @@ public class AuthMemberService {
     public void logout(Member member) {
         member.setToken(null);
         member.setTokenExpiredAt(null);
+        member.setLastLogin(LocalDateTime.now());
 
         memberRepository.save(member);
     }

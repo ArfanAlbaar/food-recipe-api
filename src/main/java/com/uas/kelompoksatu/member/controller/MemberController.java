@@ -65,9 +65,9 @@ public class MemberController {
 
     @PutMapping("/{username}")
     public WebResponse<MemberResponse> update(User user, @PathVariable("username") String username,
-            @RequestBody UpdateMemberRequest member) {
-        member.setUsername(username);
-        MemberResponse response = service.update(user, member);
+            @RequestBody UpdateMemberRequest update) {
+        update.setUsername(username);
+        MemberResponse response = service.update(user, update);
         return WebResponse.<MemberResponse>builder().data(response).build();
     }
 

@@ -1,5 +1,7 @@
 package com.uas.kelompoksatu.member;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uas.kelompoksatu.transaction.Transaksi;
 import com.uas.kelompoksatu.user.User;
@@ -37,6 +39,8 @@ public class Member {
     @Column(name = "token_expired_at")
     private Long tokenExpiredAt;
 
+    private LocalDateTime lastLogin;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "fk_user", referencedColumnName = "username")
@@ -44,6 +48,7 @@ public class Member {
 
     private Boolean premium;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Transaksi transaction;
 }

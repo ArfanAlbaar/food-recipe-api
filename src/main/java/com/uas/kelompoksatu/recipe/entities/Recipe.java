@@ -1,4 +1,4 @@
-package com.uas.kelompoksatu.recipe;
+package com.uas.kelompoksatu.recipe.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uas.kelompoksatu.user.User;

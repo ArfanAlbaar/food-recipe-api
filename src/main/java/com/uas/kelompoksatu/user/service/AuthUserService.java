@@ -1,5 +1,6 @@
 package com.uas.kelompoksatu.user.service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.uas.kelompoksatu.dontdelete.TokenResponse;
+import com.uas.kelompoksatu.dontdelete.ValidationService;
 import com.uas.kelompoksatu.user.User;
 import com.uas.kelompoksatu.user.UserRepository;
 import com.uas.kelompoksatu.user.model.LoginUserRequest;
@@ -68,4 +70,9 @@ public class AuthUserService {
 
         userRepository.save(user);
     }
+
+    public Optional<User> findByToken(String token) {
+        return userRepository.findFirstByToken(token); // Assuming you have this method in your repository
+    }
+
 }

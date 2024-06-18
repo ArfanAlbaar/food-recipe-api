@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.uas.kelompoksatu.dontdelete.ValidationService;
 import com.uas.kelompoksatu.member.Member;
 import com.uas.kelompoksatu.member.MemberRepository;
 import com.uas.kelompoksatu.member.model.MemberResponse;
@@ -17,7 +18,6 @@ import com.uas.kelompoksatu.member.model.UpdateMemberRequest;
 import com.uas.kelompoksatu.user.User;
 import com.uas.kelompoksatu.user.UserRepository;
 import com.uas.kelompoksatu.user.security.BCrypt;
-import com.uas.kelompoksatu.user.service.ValidationService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -75,36 +75,48 @@ public class MemberService {
     @Transactional
     public MemberResponse update(User user, UpdateMemberRequest update) {
         validationService.validate(update);
+        if (user != null) {
+            if (user.getToken() != null) {
 
-        Member member = memberRepository.findFirstByUserAndUsername(user, update.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "member is not found"));
+                Member member = memberRepository.findById(update.getUsername())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "member is not found"));
 
-        log.info("REQUEST : {}", update);
+                log.info("REQUEST : {}", update);
 
-        if (Objects.nonNull(update.getName())) {
-            member.setName(update.getName());
+                if (Objects.nonNull(update.getName())) {
+                    member.setName(update.getName());
+                }
+
+                if (Objects.nonNull(update.getPassword())) {
+                    member.setPassword(BCrypt.hashpw(update.getPassword(), BCrypt.gensalt()));
+                }
+
+                if (Objects.nonNull(update.getPhoneNumber())) {
+                    member.setPhoneNumber(update.getPhoneNumber());
+                }
+
+                member.setPremium(update.getPremium());
+
+                memberRepository.save(member);
+
+                log.info("MEMBER : {}", member.getName());
+
+                return MemberResponse.builder()
+                        .username(member.getUsername())
+                        .name(member.getName())
+                        .phoneNumber(member.getPhoneNumber())
+                        .premium(member.getPremium())
+                        .build();
+
+            } else {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not logged in");
+
+            }
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You don't have permission");
         }
 
-        if (Objects.nonNull(update.getPassword())) {
-            member.setPassword(BCrypt.hashpw(update.getPassword(), BCrypt.gensalt()));
-        }
-
-        if (Objects.nonNull(update.getPhoneNumber())) {
-            member.setPhoneNumber(update.getPhoneNumber());
-        }
-
-        member.setPremium(update.getPremium());
-
-        memberRepository.save(member);
-
-        log.info("MEMBER : {}", member.getName());
-
-        return MemberResponse.builder()
-                .username(member.getUsername())
-                .name(member.getName())
-                .phoneNumber(member.getPhoneNumber())
-                .premium(member.getPremium())
-                .build();
     }
 
     @Transactional
