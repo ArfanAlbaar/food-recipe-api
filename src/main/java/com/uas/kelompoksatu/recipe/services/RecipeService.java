@@ -13,6 +13,7 @@ import com.uas.kelompoksatu.recipe.entities.Recipe;
 import com.uas.kelompoksatu.recipe.entities.RecipeCategory;
 import com.uas.kelompoksatu.recipe.repositories.RecipeRepository;
 import com.uas.kelompoksatu.user.User;
+import com.uas.kelompoksatu.user.service.AuthUserService;
 
 import jakarta.transaction.Transactional;
 
@@ -25,10 +26,19 @@ public class RecipeService {
     @Autowired
     private ValidationService validationService;
 
+    @Autowired
+    private AuthUserService authUserService;
+
     @Transactional
-    public Recipe create(User user, Recipe recipe) {
+    public Recipe create(String token, Recipe recipe) {
         validationService.validate(recipe);
-        return repo.save(recipe);
+        User users = authUserService.findByToken(token).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
+        if (users.getToken().equals(token)) {
+            return repo.save(recipe);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please Login First");
+        }
     }
 
     public List<Recipe> readAll() {
@@ -72,11 +82,20 @@ public class RecipeService {
     }
 
     @Transactional
-    public String delete(User user, Integer recipeId) {
-        validationService.validate(user);
-        Recipe recipe = repo.findFirstByUserAndId(user, recipeId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe not found"));
-        repo.deleteById(recipe.getId());
-        return "Deleted";
+    public String delete(String token, Integer recipeId) {
+
+        User users = authUserService.findByToken(token)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
+        if (users.getToken().equals(token)) {
+
+            Recipe recipe = repo.findById(recipeId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe not found"));
+            repo.deleteById(recipe.getId());
+            return "Deleted";
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please Login First");
+        }
+
     }
 }

@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -55,13 +56,13 @@ public class AuthPremiumController {
     }
 
     @GetMapping(path = "/member/{premiumId}")
-    public Premium readByIdForMember(@RequestHeader("X-API-TOKEN") String token,
+    public Optional<PremiumResponse> readByIdForMember(@RequestHeader("X-API-TOKEN") String token,
             @PathVariable("premiumId") Integer premiumId) {
         Member currentMember = authMemberService.findByToken(token)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "token not found"));
-        Premium premium = service.readById(premiumId);
-        if (premium != null && currentMember.getToken() != null) {
-            return service.readById(premiumId);
+
+        if (currentMember.getToken() != null) {
+            return service.readByIdForMember(premiumId);
         } else {
             return null;
         }

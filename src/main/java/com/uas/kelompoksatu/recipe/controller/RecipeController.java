@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,8 +31,12 @@ public class RecipeController {
     private RecipeService service;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Recipe create(User user, @RequestBody Recipe recipe) {
-        return service.create(user, recipe);
+    public Recipe create(@RequestHeader("API-TOKEN") String token, @RequestBody Recipe recipe) {
+        try {
+            return service.create(token, recipe);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving Recipe", e);
+        }
     }
 
     @GetMapping
@@ -61,9 +66,8 @@ public class RecipeController {
         return service.update(user, recipe);
     }
 
-    @DeleteMapping("/{recipeId}")
-    public String delete(User user, @PathVariable("recipeId") Integer recipeId) {
-
-        return service.delete(user, recipeId);
+    @DeleteMapping(path = "/{recipeId}")
+    public String delete(@RequestHeader("API-TOKEN") String token, @PathVariable("recipeId") Integer recipeId) {
+        return service.delete(token, recipeId);
     }
 }

@@ -2,6 +2,7 @@ package com.uas.kelompoksatu.recipe.services;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,8 +63,12 @@ public class PremiumService {
     }
 
     public Premium readById(Integer premiumId) {
-        return repo.findById(premiumId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "premium not found"));
+        return repo.findById(premiumId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "RECIPE IS NOT FOUND"));
+    }
+
+    public Optional<PremiumResponse> readByIdForMember(Integer premiumId) {
+        return repo.findFirstById(premiumId);
     }
 
     @Transactional
