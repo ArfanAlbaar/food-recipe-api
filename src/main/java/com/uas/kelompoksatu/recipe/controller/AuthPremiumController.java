@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.uas.kelompoksatu.member.Member;
 import com.uas.kelompoksatu.member.service.AuthMemberService;
 import com.uas.kelompoksatu.recipe.entities.Premium;
+import com.uas.kelompoksatu.recipe.entities.PremiumResponse;
 import com.uas.kelompoksatu.recipe.services.PremiumService;
 import com.uas.kelompoksatu.user.User;
 import com.uas.kelompoksatu.user.service.AuthUserService;
@@ -42,13 +43,28 @@ public class AuthPremiumController {
     private AuthUserService authUserService;
 
     @GetMapping(path = "/member/list")
-    public List<Premium> listForMember(Member member) {
-        return service.readAllPremiumForMember(member);
+    public List<PremiumResponse> listForMember(@RequestHeader("X-API-TOKEN") String token) {
+        Member currentMember = authMemberService.findByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "token not found"));
+        if (currentMember.getToken() != null) {
+            return service.readAll();
+        } else {
+            return null;
+        }
+
     }
 
     @GetMapping(path = "/member/{premiumId}")
-    public Premium readByIdForMember(Member member, @PathVariable("premiumId") Integer premiumId) {
-        return service.readPremiumByIdForMember(member, premiumId);
+    public Premium readByIdForMember(@RequestHeader("X-API-TOKEN") String token,
+            @PathVariable("premiumId") Integer premiumId) {
+        Member currentMember = authMemberService.findByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "token not found"));
+        Premium premium = service.readById(premiumId);
+        if (premium != null && currentMember.getToken() != null) {
+            return service.readById(premiumId);
+        } else {
+            return null;
+        }
     }
 
     @GetMapping("/member/{premiumId}/download")
@@ -77,8 +93,14 @@ public class AuthPremiumController {
     }
 
     @GetMapping(path = "/admin/list")
-    public List<Premium> listForAdmin(User user) {
-        return service.readAllPremiumForAdmin(user);
+    public List<PremiumResponse> listForAdmin(@RequestHeader("API-TOKEN") String token) {
+        User currentUser = authUserService.findByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "token not found"));
+        if (currentUser.getToken() != null) {
+            return service.readAll();
+        } else {
+            return null;
+        }
     }
 
     @GetMapping(path = "/admin/{premiumId}")

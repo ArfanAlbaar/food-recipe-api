@@ -1,14 +1,15 @@
 package com.uas.kelompoksatu.recipe.repositories;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.uas.kelompoksatu.recipe.entities.Premium;
-import com.uas.kelompoksatu.user.User;
+import com.uas.kelompoksatu.recipe.entities.PremiumResponse;
 
 @Repository
 public interface PremiumRepository extends JpaRepository<Premium, Integer> {
-    Optional<Premium> findFirstByUserAndId(User user, Integer id);
+
+    List<PremiumResponse> findAllBy();
 }

@@ -11,9 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.uas.kelompoksatu.dontdelete.ValidationService;
-import com.uas.kelompoksatu.member.Member;
 import com.uas.kelompoksatu.member.MemberRepository;
 import com.uas.kelompoksatu.recipe.entities.Premium;
+import com.uas.kelompoksatu.recipe.entities.PremiumResponse;
 import com.uas.kelompoksatu.recipe.repositories.PremiumRepository;
 import com.uas.kelompoksatu.user.User;
 import com.uas.kelompoksatu.user.UserRepository;
@@ -40,7 +40,7 @@ public class PremiumService {
     private AuthUserService authUserService;
 
     @Transactional
-    public Premium create(String token, MultipartFile file) throws IOException {
+    public String create(String token, MultipartFile file) throws IOException {
         User users = authUserService.findByToken(token).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
         if (users.getToken().equals(token)) {
@@ -48,7 +48,8 @@ public class PremiumService {
             Premium premium = new Premium();
             premium.setPremiumName(file.getOriginalFilename());
             premium.setDataRecipes(file.getBytes());
-            return repo.save(premium);
+            repo.save(premium);
+            return "Success";
 
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please Login First");
@@ -56,22 +57,8 @@ public class PremiumService {
 
     }
 
-    public List<Premium> readAllPremiumForMember(Member member) {
-        validationService.validate(member);
-        Member members = memberRepo.findById(member.getUsername())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
-
-        if (members.getToken() != null) {
-            if (members.getPremium() == true) {
-                return repo.findAll();
-            } else {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please BUY PREMIUM First");
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please Login First");
-        }
-
+    public List<PremiumResponse> readAll() {
+        return repo.findAllBy();
     }
 
     public Premium readById(Integer premiumId) {
@@ -79,60 +66,45 @@ public class PremiumService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "premium not found"));
     }
 
-    public Premium readPremiumByIdForMember(Member member, Integer premiumId) {
-        validationService.validate(member);
-        Member members = memberRepo.findFirstByToken(member.getToken())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
-
-        if (members.getToken() != null) {
-            if (members.getPremium() == true) {
-                return repo.findById(premiumId)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "recipe not found"));
-            } else {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please BUY PREMIUM First");
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please Login First");
-        }
-
-    }
-
-    public List<Premium> readAllPremiumForAdmin(User user) {
-        validationService.validate(user);
-        User users = userRepo.findById(user.getUsername())
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
-
-        if (users.getToken() != null) {
-
-            return repo.findAll();
-
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please Login First");
-        }
-
-    }
-
     @Transactional
-    public ResponseEntity<Premium> update(User user, Premium update) {
+    public ResponseEntity<Premium> update(String token, Premium update) {
         validationService.validate(update);
 
-        Premium premium = repo.findFirstByUserAndId(user, update.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "premium is not found"));
-        premium.setPremiumName(update.getPremiumName());
-        premium.setDataRecipes(update.getDataRecipes());
-        repo.save(premium);
-        return new ResponseEntity<Premium>(premium, HttpStatus.ACCEPTED);
+        User users = authUserService.findByToken(token)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
+        if (users.getToken().equals(token)) {
+
+            Premium premium = repo.findById(update.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "premium is not found"));
+            premium.setPremiumName(update.getPremiumName());
+            // premium.setDataRecipes(update.getDataRecipes()); //GAUSAH UPDATE FILE,
+            // CUMA UPDATE NAMA, HAPUS AJA VALUENYA KALO UPDATE FILE
+            repo.save(premium);
+            return new ResponseEntity<Premium>(premium, HttpStatus.ACCEPTED);
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please Login First");
+        }
+
     }
 
     @Transactional
-    public String delete(User user, Integer premiumId) {
-        validationService.validate(user);
-        Premium premium = repo.findFirstByUserAndId(user, premiumId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "premium not found"));
-        repo.deleteById(premium.getId());
-        return "Deleted";
+    public String delete(String token, Integer premiumId) {
+
+        User users = authUserService.findByToken(token)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
+        if (users.getToken().equals(token)) {
+
+            Premium premium = repo.findById(premiumId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "premium not found"));
+            repo.deleteById(premium.getId());
+            return "Deleted";
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please Login First");
+        }
+
     }
 
 }

@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.uas.kelompoksatu.recipe.entities.Premium;
 import com.uas.kelompoksatu.recipe.services.PremiumService;
-import com.uas.kelompoksatu.user.User;
 
 @RestController
 @RequestMapping("/api/premium")
@@ -30,25 +29,27 @@ public class PremiumController {
     private PremiumService service;
 
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Premium create(@RequestHeader("API-TOKEN") String token, @RequestParam("file") MultipartFile file) {
+    public String create(@RequestHeader("API-TOKEN") String token, @RequestParam("file") MultipartFile file) {
         try {
-            return service.create(token, file);
+            service.create(token, file);
+            return "Success";
         } catch (IOException e) {
             throw new RuntimeException("Error saving document", e);
         }
     }
 
-    @PutMapping(path = "/{premiumId}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = {
-            MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<Premium> update(User user, @PathVariable("premiumId") Integer premiumId,
+    @PutMapping(path = "/{premiumId}")
+    public ResponseEntity<Premium> update(
+            @RequestHeader("API-TOKEN") String token,
+            @PathVariable("premiumId") Integer premiumId,
             @RequestBody Premium update) {
         update.setId(premiumId);
-        return service.update(user, update);
+        return service.update(token, update);
     }
 
     @DeleteMapping(path = "/{premiumId}")
-    public String delete(User user, @PathVariable("premiumId") Integer premiumId) {
-        return service.delete(user, premiumId);
+    public String delete(@RequestHeader("API-TOKEN") String token, @PathVariable("premiumId") Integer premiumId) {
+        return service.delete(token, premiumId);
     }
 
 }
