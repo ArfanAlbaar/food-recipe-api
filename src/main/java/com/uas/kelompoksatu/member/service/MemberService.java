@@ -59,6 +59,21 @@ public class MemberService {
                 .build();
     }
 
+    public Member getByUsername(User user, String username) {
+        validationService.validate(user);
+
+        User users = userRepository.findById(user.getUsername())
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
+
+        if (users.getToken() != null) {
+            Member member = memberRepository.findById(username).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Username is not found"));
+            return member;
+        }
+        return null;
+    }
+
     public List<Member> readAll(User user) {
         validationService.validate(user);
 

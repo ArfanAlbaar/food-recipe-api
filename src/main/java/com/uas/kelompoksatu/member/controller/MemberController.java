@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -55,13 +56,18 @@ public class MemberController {
         return service.readAll(user);
     }
 
-    // @PatchMapping(path = "/current", consumes = MediaType.APPLICATION_JSON_VALUE,
-    // produces = MediaType.APPLICATION_JSON_VALUE)
-    // public WebResponse<MemberResponse> update(User user, @RequestBody
-    // UpdateMemberRequest request) {
-    // MemberResponse memberResponse = service.update(user, request);
-    // return WebResponse.<MemberResponse>builder().data(memberResponse).build();
-    // }
+    @GetMapping("/{username}")
+    public Member update(User user, @PathVariable("username") String username) {
+
+        return service.getByUsername(user, username);
+
+    }
+
+    @PatchMapping(path = "/current", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public WebResponse<MemberResponse> update(User user, @RequestBody UpdateMemberRequest request) {
+        MemberResponse memberResponse = service.update(user, request);
+        return WebResponse.<MemberResponse>builder().data(memberResponse).build();
+    }
 
     @PutMapping("/{username}")
     public WebResponse<MemberResponse> update(User user, @PathVariable("username") String username,

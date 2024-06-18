@@ -1,4 +1,4 @@
-package com.uas.kelompoksatu.dontdelete;
+package com.uas.kelompoksatu.user.resolver;
 
 import java.util.List;
 
@@ -7,10 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.uas.kelompoksatu.user.resolver.UserArgumentResolver;
-
 @Configuration
-public class WebConfiguration implements WebMvcConfigurer {
+public class WebUserConfiguration implements WebMvcConfigurer {
 
     @Autowired
     private UserArgumentResolver userArgumentResolver;
@@ -20,4 +18,5 @@ public class WebConfiguration implements WebMvcConfigurer {
         WebMvcConfigurer.super.addArgumentResolvers(resolvers);
         resolvers.add(userArgumentResolver);
     }
+
 }
