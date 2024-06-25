@@ -24,7 +24,7 @@ import com.uas.kelompoksatu.user.service.AuthUserService;
 
 @RestController
 @RequestMapping("/api/transaction")
-@CrossOrigin
+@CrossOrigin("*")
 public class TransaksiController {
 
     @Autowired

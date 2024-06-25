@@ -30,7 +30,7 @@ import com.uas.kelompoksatu.user.UserRepository;
 
 @RestController
 @RequestMapping("/api/member")
-@CrossOrigin
+@CrossOrigin("*")
 public class MemberController {
 
     @Autowired

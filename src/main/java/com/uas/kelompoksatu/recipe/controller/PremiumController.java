@@ -22,7 +22,7 @@ import com.uas.kelompoksatu.recipe.services.PremiumService;
 
 @RestController
 @RequestMapping("/api/premium")
-@CrossOrigin
+@CrossOrigin("*")
 public class PremiumController {
 
     @Autowired

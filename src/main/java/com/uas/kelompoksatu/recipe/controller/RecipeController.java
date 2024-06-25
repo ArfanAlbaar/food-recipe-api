@@ -24,7 +24,7 @@ import com.uas.kelompoksatu.user.User;
 
 @RestController
 @RequestMapping("/api/recipe")
-@CrossOrigin
+@CrossOrigin("*")
 public class RecipeController {
 
     @Autowired

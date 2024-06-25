@@ -19,7 +19,7 @@ import com.uas.kelompoksatu.user.service.UserService;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired

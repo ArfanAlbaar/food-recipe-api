@@ -39,6 +39,8 @@ public class Recipe {
 
     private Boolean favorite = false;
 
+    private String imgLink;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "username", referencedColumnName = "username")

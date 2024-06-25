@@ -31,7 +31,7 @@ import com.uas.kelompoksatu.user.service.AuthUserService;
 
 @RestController
 @RequestMapping("/api/premium/auth")
-@CrossOrigin
+@CrossOrigin("*")
 public class AuthPremiumController {
 
     @Autowired

@@ -20,7 +20,7 @@ import com.uas.kelompoksatu.member.service.AuthMemberService;
 
 @RestController
 @RequestMapping("/api/member/auth")
-@CrossOrigin
+@CrossOrigin("*")
 public class AuthMemberController {
 
     @Autowired
