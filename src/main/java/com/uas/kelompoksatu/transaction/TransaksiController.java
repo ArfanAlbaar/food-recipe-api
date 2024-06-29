@@ -3,7 +3,6 @@ package com.uas.kelompoksatu.transaction;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.uas.kelompoksatu.member.model.MemberResponse;
 import com.uas.kelompoksatu.user.User;
@@ -58,16 +56,7 @@ public class TransaksiController {
     @DeleteMapping(path = "/{transactionId}")
     public String delete(@RequestHeader("API-TOKEN") String token,
             @PathVariable("transactionId") Integer transactionId) {
-
-        User user = authUserService.findByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not logged in"));
-        if (user.getToken().equals(token)) {
-            return service.delete(transactionId);
-
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not logged in");
-        }
-
+        return service.delete(token, transactionId);
     }
 
 }

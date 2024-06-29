@@ -16,6 +16,7 @@ import com.uas.kelompoksatu.member.model.MemberResponse;
 import com.uas.kelompoksatu.member.service.AuthMemberService;
 import com.uas.kelompoksatu.user.User;
 import com.uas.kelompoksatu.user.UserRepository;
+import com.uas.kelompoksatu.user.service.AuthUserService;
 
 import jakarta.transaction.Transactional;
 
@@ -31,6 +32,8 @@ public class TransaksiService {
 
     @Autowired
     private AuthMemberService authMemberService;
+    @Autowired
+    private AuthUserService authUserService;
 
     @Autowired
     private ValidationService validationService;
@@ -117,12 +120,22 @@ public class TransaksiService {
     }
 
     @Transactional
-    public String delete(Integer transactionId) {
+    public String delete(String token, Integer transactionId) {
+        User users = authUserService.findByToken(token)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "SORRY, YOU DON'T HAVE ACCESS"));
+        if (users.getToken().equals(token)) {
 
-        Transaksi transaction = repo.findById(transactionId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaksi not found"));
-        repo.deleteById(transaction.getId());
-        return "Deleted";
+            Transaksi transaction = repo.findById(transactionId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaksi not found"));
+            System.out.println("Deleting transaction with ID: " + transaction.getId());
+
+            repo.deleteById(transaction.getId());
+            return "Deleted";
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please Login First");
+        }
     }
 
 }
