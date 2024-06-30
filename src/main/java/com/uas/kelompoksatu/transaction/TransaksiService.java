@@ -51,9 +51,11 @@ public class TransaksiService {
             transaction.setTimestamp(LocalDateTime.now());
 
             member.setTransaction(transaction);
+            repo.save(transaction);
             memberRepo.save(member);
 
             return MemberResponse.builder()
+                    .username(member.getUsername())
                     .name(member.getName())
                     .phoneNumber(member.getPhoneNumber())
                     .premium(member.getPremium())
