@@ -56,6 +56,7 @@ public class MemberService {
                 .username(member.getUsername())
                 .name(member.getName())
                 .phoneNumber(member.getPhoneNumber())
+                .premium(member.getPremium())
                 .build();
     }
 
